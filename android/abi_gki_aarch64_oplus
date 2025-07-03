@@ -510,6 +510,7 @@
   vfs_path_lookup
   vfs_rename
   vfs_rmdir
+  vfs_splice_read
   vfs_statfs
   vfs_unlink
   wait_for_completion_io_timeout
@@ -527,6 +528,7 @@
   stack_depot_fetch
   get_slabinfo
   vmalloc_nr_pages
+  vma_set_file
   on_each_cpu_cond_mask
   memcg_kmem_online_key
   stack_depot_print
