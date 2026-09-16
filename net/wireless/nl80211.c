@@ -9225,6 +9225,14 @@ static int nl80211_trigger_scan(struct sk_buff *skb, struct genl_info *info)
 	if (!request)
 		return -ENOMEM;
 
+	/*
+	 * channels[] is annotated __counted_by(n_channels), so the bounds
+	 * checks generated for it read request->n_channels.  The array is
+	 * filled below, so publish the allocated capacity here; the number of
+	 * channels actually kept replaces it once the loop has run.
+	 */
+	request->n_channels = n_channels;
+
 	if (n_ssids)
 		request->ssids = (void *)&request->channels[n_channels];
 	request->n_ssids = n_ssids;
@@ -9673,6 +9681,12 @@ nl80211_parse_sched_scan(struct wiphy *wiphy, struct wireless_dev *wdev,
 	request = kzalloc(size, GFP_KERNEL);
 	if (!request)
 		return ERR_PTR(-ENOMEM);
+
+	/*
+	 * See nl80211_trigger_scan(): channels[] is __counted_by(n_channels),
+	 * so the capacity has to be visible before the array is filled.
+	 */
+	request->n_channels = n_channels;
 
 	if (n_ssids)
 		request->ssids = (void *)&request->channels[n_channels];
